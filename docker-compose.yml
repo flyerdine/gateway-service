@@ -1,0 +1,23 @@
+version: '3'
+services:
+  webapp:
+    image: imanilchaudhari/docker-ubuntu:22.04
+    restart: 'no'
+    ports:
+      - '${APP_PORT}:80'
+    volumes:
+      - './:/var/www/'
+      - './docker/app/app.conf:/etc/apache2/sites-available/000-default.conf'
+      - './docker/php/php.ini:/etc/php/8.1/apache2/php.ini'
+      - './docker/php/php.ini:/etc/php/8.1/cli/php.ini'
+    links:
+      - redisdb
+    depends_on:
+      - redisdb
+  redisdb:
+    image: imanilchaudhari/docker-redis
+    restart: 'no'
+    ports:
+      - '${REDIS_PORT}:6379'
+    volumes:
+      - './docker/redis.conf:/usr/local/etc/redis/redis.conf'
